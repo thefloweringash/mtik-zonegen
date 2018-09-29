@@ -40,13 +40,11 @@ class Generator
 end
 
 def main(args)
-  if args.count >= 1
-    LoadableConfig.configure! do |config|
-      config.config_path_prefix = args[0]
+  LoadableConfig.configure! do |config|
+    config.config_path_prefix = args[0] if args.count >= 1
 
-      config.preprocess do |string_contents|
-        Erubis::Eruby.new(string_contents).result
-      end
+    config.preprocess do |string_contents|
+      Erubis::Eruby.new(string_contents).result
     end
   end
 
