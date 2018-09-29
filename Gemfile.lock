@@ -1,0 +1,44 @@
+GIT
+  remote: https://github.com/iknow/loadable_config
+  revision: 46e1fbde288ce75468ec4175e131376b6d53ec48
+  specs:
+    loadable_config (0.3.4)
+      json_schema
+
+PATH
+  remote: .
+  specs:
+    mtik-zonegen (0.0.0)
+      activesupport
+      erubis
+      loadable_config
+      mtik
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (5.2.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 0.7, < 2)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+    concurrent-ruby (1.0.5)
+    erubis (2.7.0)
+    i18n (1.1.0)
+      concurrent-ruby (~> 1.0)
+    json_schema (0.19.1)
+    minitest (5.11.3)
+    mtik (4.0.3)
+    thread_safe (0.3.6)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  loadable_config!
+  mtik-zonegen!
+
+BUNDLED WITH
+   1.16.5

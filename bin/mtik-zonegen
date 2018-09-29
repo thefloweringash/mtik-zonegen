@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'erubis'
+require 'loadable_config'
+require 'active_support'
+require 'active_support/core_ext'
+require 'mtik'
+
+class Generator
+  class Config < LoadableConfig
+    config_file 'config.yaml'
+    attribute :host
+    attribute :username
+    attribute :password
+
+    attribute :zone_template
+    attribute :zone_output_file
+  end
+
+  def mt
+    @mt ||= MTik::Connection.new(
+      host: Config.host,
+      user: Config.username,
+      pass: Config.password)
+  end
+
+  def all_ip_addresses
+    return enum_for(:all_ip_addresses) unless block_given?
+    mt.get_reply_each('/ip/address/getall') { |req, response| yield response }
+  end
+
+  def update!
+    ifs = all_ip_addresses.group_by { |addr| addr["interface"] }
+
+    File.atomic_write(Config.zone_output_file, File.dirname(Config.zone_output_file)) do |file|
+      template = File.read(Config.zone_template)
+      file.write(Erubis::Eruby.new(template).result({ ifs: ifs }))
+    end
+  end
+end
+
+def main(args)
+  if args.count >= 1
+    LoadableConfig.configure! do |config|
+      config.config_path_prefix = args[0]
+
+      config.preprocess do |string_contents|
+        Erubis::Eruby.new(string_contents).result
+      end
+    end
+  end
+
+  Generator.new.update!
+end
+
+main(ARGV)
