@@ -12,16 +12,24 @@ class Generator
     attribute :host
     attribute :username
     attribute :password
+    attribute :ssl, optional: true
 
     attribute :zone_template
     attribute :zone_output_file
+
+    def ssl
+      return true if @ssl.nil?
+      @ssl
+    end
   end
 
   def mt
+    raise unless Config.ssl
     @mt ||= MTik::Connection.new(
       host: Config.host,
       user: Config.username,
-      pass: Config.password)
+      pass: Config.password,
+      ssl:  Config.ssl)
   end
 
   def all_ip_addresses
